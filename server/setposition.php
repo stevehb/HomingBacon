@@ -33,8 +33,10 @@ if(!$res) {
 $hasUser = ($res->num_rows != 0);
 
 // either update or insert
-$lat = is_numeric($_GET['lat']) ? $_GET['lat'] : null;
-$lon = is_numeric($_GET['lon']) ? $_GET['lon'] : null;
+$lat = is_numeric($_GET['latitude']) ? $_GET['latitude'] : null;
+$lon = is_numeric($_GET['longitude']) ? $_GET['longitude'] : null;
+$acc = is_numeric($_GET['accuracy']) ? $_GET['accuracy'] : null;
+$time = time();
 if($hasUser) {
     $sql_stmt = sprintf(
         "update\n" .
@@ -42,25 +44,44 @@ if($hasUser) {
         "set\n" .
         "  latitude = %F,\n" .
         "  longitude = %F,\n" .
-        "  datetime = NOW()"
+        "  accuracy = %F,\n" .
+        "  epoch_time = %d\n" .
         "where\n" .
         "  username = '%s'",
         $lat,
         $lon,
+        $acc,
+        $time,
         $conn->real_escape_string($username));
 } else {
     $sql_stmt = sprintf(
         "insert into \n" .
-        "  tbl_lastknown (username, latitude, longitude, datetime)\n" .
+        "  tbl_lastknown (username, latitude, longitude, accuracy, epoch_time)\n" .
         "values (\n" .
-        "  username = '%s',\n"
-        "  latitude = %F,\n" .
-        "  longitude = %F,\n" .
-        "  datetime = NOW())",
+        "  '%s',\n" .
+        "  %F,\n" .
+        "  %F,\n" .
+        "  %F,\n" .
+        "  %d)\n",
         $conn->real_escape_string($username),
         $lat,
-        $lon);
+        $lon,
+        $acc,
+        $time);
 }
+$res = $conn->query($sql_stmt);
+if(!$res) {
+    exit(getErrJson($conn->errno, $conn->error));
+}
+
+echo json_encode(array(
+    'status' => 'SUCCESS',
+    'new_user' => !$hasUser,
+    'username' => $username,
+    'latitude' => $lat,
+    'longitude' => $lon,
+    'accuracy' => $acc,
+    'epoch_time' => $time));
 
 $conn->close();
 ?>

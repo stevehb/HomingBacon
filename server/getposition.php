@@ -22,7 +22,8 @@ $sql_stmt = sprintf(
     "select\n" .
     "  latitude,\n" .
     "  longitude,\n" .
-    "  datetime\n" .
+    "  accuracy,\n" .
+    "  epoch_time\n" .
     "from\n" .
     "  tbl_lastknown\n" .
     "where\n" .
@@ -42,8 +43,10 @@ if($res->num_rows == 0) {
 $row = $res->fetch_assoc();
 echo json_encode(array(
     'status' => 'SUCCESS',
-    'lat' => $row['latitude'],
-    'lon' => $row['longitude'],
-    'datetime' => $row['datetime']));
+    'username' => $username,
+    'latitude' => $row['latitude'],
+    'longitude' => $row['longitude'],
+    'accuracy' => $row['accuracy'],
+    'epoch_time' => $row['epoch_time']));
 $conn->close();
 ?>

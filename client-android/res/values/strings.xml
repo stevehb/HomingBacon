@@ -5,5 +5,6 @@
     <string name="app_name">HomingBacon</string>
     <string name="transmit_checkbox_label">Transmitting</string>
     <string name="listen_checkbox_label">Listening</string>
+    <string name="username_choice">Where is the world is</string>
 
 </resources>
