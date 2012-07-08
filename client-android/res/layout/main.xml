@@ -22,12 +22,14 @@
 
             <CheckBox
                 android:id="@+id/listen_checkbox"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:text="@string/listen_checkbox_label" />
 
             <CheckBox
                 android:id="@+id/transmit_checkbox"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:text="@string/transmit_checkbox_label" />

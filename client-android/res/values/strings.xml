@@ -5,6 +5,16 @@
     <string name="app_name">HomingBacon</string>
     <string name="transmit_checkbox_label">Transmitting</string>
     <string name="listen_checkbox_label">Listening</string>
-    <string name="username_choice">Where is the world is</string>
+    <string name="username_choice">Where in the world is</string>
+    
+    <string name="listen_server_error">Unable to contact server.</string>
+    <string name="listen_http_exception">Unable to make connection to server.</string>
+    <string name="listen_io_exception">Could not read server response.</string>
+    <string name="listen_json_exception">Could not read server response.</string>
 
+    <string name="transmit_server_error">Unable to update server.</string>
+    <string name="transmit_http_exception">Unable to make connection to server.</string>
+    <string name="transmit_io_exception">Could not read server response.</string>
+    <string name="transmit_json_exception">Could not read server response.</string>
+    
 </resources>
