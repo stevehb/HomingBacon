@@ -1,17 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/radialbg"
-    android:orientation="vertical"
-    android:weightSum="1" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:id="@+id/topLayout"
+        android:id="@+id/controlLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
         android:background="@drawable/radialbg"
         android:orientation="vertical" >
 
@@ -25,21 +20,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/listen_checkbox_label" />
+                android:text="@string/title_control_listening_checkbox" />
 
             <CheckBox
                 android:id="@+id/transmit_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/transmit_checkbox_label" />
+                android:text="@string/title_control_transmitting_checkbox" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/username_spinner_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/username_choice"
+            android:text="@string/title_control_username_spinner"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Spinner
@@ -48,11 +43,6 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <com.google.android.maps.MapView
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:apiKey="053VFCiyb0FbC_HkkRv-CALVQQa-S13fIvBRFkw" >
-    </com.google.android.maps.MapView>
+    <include layout="@layout/mapview_debug" />
 
-</LinearLayout>
+</RelativeLayout>

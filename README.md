@@ -1,4 +1,4 @@
 HomingBacon
 ===========
 
-Experimental phone tracking and display using PHP, MySQL, and Android
+Experimental phone tracking and display using Android and the Google App Engine

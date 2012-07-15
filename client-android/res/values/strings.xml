@@ -1,20 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, HomingBaconActivity!</string>
-    <string name="app_name">HomingBacon</string>
-    <string name="transmit_checkbox_label">Transmitting</string>
-    <string name="listen_checkbox_label">Listening</string>
-    <string name="username_choice">Where in the world is</string>
-    
-    <string name="listen_server_error">Unable to contact server.</string>
-    <string name="listen_http_exception">Unable to make connection to server.</string>
-    <string name="listen_io_exception">Could not read server response.</string>
-    <string name="listen_json_exception">Could not read server response.</string>
-
-    <string name="transmit_server_error">Unable to update server.</string>
-    <string name="transmit_http_exception">Unable to make connection to server.</string>
-    <string name="transmit_io_exception">Could not read server response.</string>
-    <string name="transmit_json_exception">Could not read server response.</string>
+    <string name="app_name">Homing Bacon</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_homing_bacon">Homing Bacon</string>
+    <string name="title_control_listening_checkbox">Listening</string>
+    <string name="title_control_transmitting_checkbox">Transmitting</string>
+    <string name="title_control_username_spinner">Choose friend:</string>
     
 </resources>
