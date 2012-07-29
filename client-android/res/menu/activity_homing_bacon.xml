@@ -1,5 +1,14 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="100"
         android:title="@string/menu_settings"
-        android:orderInCategory="100" />
+        android:icon="@android:drawable/ic_menu_preferences"/>
+    <item
+        android:id="@+id/menu_set_username"
+        android:orderInCategory="200"
+        android:title="@string/menu_set_username"
+        android:icon="@android:drawable/ic_menu_edit"/>
+
 </menu>

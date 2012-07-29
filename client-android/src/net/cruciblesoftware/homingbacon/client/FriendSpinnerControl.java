@@ -3,6 +3,8 @@ package net.cruciblesoftware.homingbacon.client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import net.cruciblesoftware.homingbacon.PreferenceKeys;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -16,10 +18,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-class FriendSpinnerControl implements OnItemSelectedListener {
+class FriendSpinnerControl extends BaseControl implements OnItemSelectedListener  {
     private static final String TAG = "HB: " + FriendSpinnerControl.class.getSimpleName();
 
-    private UserSettings settings;
     private HomingBaconActivity activity;
     private Spinner friendSpinner;
     private ArrayAdapter<String> spinnerAdapter;
@@ -34,7 +35,7 @@ class FriendSpinnerControl implements OnItemSelectedListener {
                 // get the username list from the server
                 String urlReq = //
                         "http://homingbacon.appspot.com/homingbacon?" +
-                        "action=getusers&username=" + settings.get(UserSettings.PREF_KEY_USERNAME);
+                        "action=getusers&username=" + userData.get(PreferenceKeys.USERNAME);
                 DebugLog.log(TAG, "using request url:\n\t" + urlReq);
                 HttpClient client = new DefaultHttpClient();
                 HttpResponse resp = client.execute(new HttpGet(urlReq));
@@ -71,7 +72,6 @@ class FriendSpinnerControl implements OnItemSelectedListener {
 
     FriendSpinnerControl(HomingBaconActivity a) {
         activity = a;
-        settings = UserSettings.getInstance();
         friendSpinner = (Spinner)activity.findViewById(R.id.username_spinner);
         friendSpinner.setOnItemSelectedListener(this);
         new GetFriendsTask().execute((Void[])null);
@@ -81,7 +81,7 @@ class FriendSpinnerControl implements OnItemSelectedListener {
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         String friendName = (String) parent.getItemAtPosition(pos);
         DebugLog.log(TAG, "item selected: pos=" + pos + ", itemAt=" + friendName);
-        settings.set(UserSettings.PREF_KEY_FRIEND_NAME,  friendName);
+        userData.set(PreferenceKeys.FRIEND_NAME,  friendName);
     }
 
     @Override

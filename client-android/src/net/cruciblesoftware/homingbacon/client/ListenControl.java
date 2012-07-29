@@ -3,7 +3,7 @@ package net.cruciblesoftware.homingbacon.client;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-class ListenControl {
+class ListenControl extends BaseControl {
     private HomingBaconActivity activity;
     private CheckBox listenCheckbox, transmitCheckbox;
     private Spinner usernameSpinner;

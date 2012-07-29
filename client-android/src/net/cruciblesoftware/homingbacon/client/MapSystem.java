@@ -7,7 +7,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 
-class MapSystem {
+class MapSystem extends BaseControl {
     private static final String TAG = "HB: " + MapSystem.class.getSimpleName();
     private static final int EARTH_RADIUS = 6371000;
     private final static double BEARING = 0.0;
