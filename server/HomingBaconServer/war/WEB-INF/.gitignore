@@ -1,0 +1,5 @@
+*
+!appengine-web.xml
+!logging.properties
+!web.xml
+!.gitignore
