@@ -1,80 +1,79 @@
 package net.cruciblesoftware.homingbacon.client;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
+import net.cruciblesoftware.homingbacon.JsonKeys;
+import net.cruciblesoftware.homingbacon.JsonUtils;
+import net.cruciblesoftware.homingbacon.JsonValues;
 import net.cruciblesoftware.homingbacon.PreferenceKeys;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
-import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-class FriendSpinnerControl extends BaseControl implements OnItemSelectedListener  {
+import com.google.gson.JsonObject;
+
+class FriendSpinnerControl extends BaseControl implements OnItemSelectedListener, Message.Listener {
     private static final String TAG = "HB: " + FriendSpinnerControl.class.getSimpleName();
 
     private HomingBaconActivity activity;
     private Spinner friendSpinner;
     private ArrayAdapter<String> spinnerAdapter;
 
-    private boolean hasUsers = false;
-
-    class GetFriendsTask extends AsyncTask<Void, Void, String> {
+    private Message.Listener usernameListener = new Message.Listener() {
         @Override
-        protected String doInBackground(Void... params) {
-            String users = "";
-            try {
-                // get the username list from the server
-                String urlReq = //
-                        "http://homingbacon.appspot.com/homingbacon?" +
-                        "action=getusers&username=" + userData.get(PreferenceKeys.USERNAME);
-                DebugLog.log(TAG, "using request url:\n\t" + urlReq);
-                HttpClient client = new DefaultHttpClient();
-                HttpResponse resp = client.execute(new HttpGet(urlReq));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
-                String line = "";
-                StringBuilder jsonBuff = new StringBuilder();
-                while((line = reader.readLine()) != null) { jsonBuff.append(line); }
+        public void receiveMessage(Message msg) {
+            switch(msg.type) {
+            case NEW_USERNAME:
+                DebugLog.log(TAG, "setting new username: " + msg.data);
 
-                // find the list and return it
-                JSONObject json = new JSONObject(jsonBuff.toString());
-                if(json.getString("status").equalsIgnoreCase("success")) {
-                    hasUsers = true;
-                    users = json.getString("user_list");
-                } else {
-                    hasUsers = false;
-                    users = "N/A";
+                break;
+            case ON_PAUSE:
+                break;
+            case ON_RESUME:
+                break;
+            case SERVER_RESPONSE:
+                DebugLog.log(TAG, "message back from server: " + msg.data);
+                JsonObject json = JsonUtils.getJsonObject(msg.data);
+                if(json.get(JsonKeys.STATUS).getAsString().equals(JsonValues.ERROR)) {
+                    setSpinnerValues(new String[] { "N/A" });
+                    return;
                 }
-            } catch (Exception e) {
-                String msg = "could not get usernames: "+ e.getLocalizedMessage();
-                DebugLog.log(TAG, msg);
-                hasUsers = false;
-            }
-            return users;
-        }
+                String nameList = json.get(JsonKeys.FRIEND_LIST).getAsString();
+                String[] names = nameList.split(",");
+                setSpinnerValues(names);
+                userData.set(PreferenceKeys.FRIEND_LIST, nameList);
+                break;
+            default:
+                break;
 
-        @Override
-        protected void onPostExecute(String result) {
-            String[] names = result.split(",");
-            spinnerAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, names);
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            friendSpinner.setAdapter(spinnerAdapter);
+            }
         }
-    }
+    };
 
     FriendSpinnerControl(HomingBaconActivity a) {
         activity = a;
         friendSpinner = (Spinner)activity.findViewById(R.id.username_spinner);
         friendSpinner.setOnItemSelectedListener(this);
-        new GetFriendsTask().execute((Void[])null);
+        String oldFriendList = userData.get(PreferenceKeys.FRIEND_LIST);
+        if(!oldFriendList.isEmpty()) {
+            setSpinnerValues(oldFriendList.split(","));
+        }
+
+        server.getFriends(userData.get(PreferenceKeys.USERNAME), usernameListener);
+    }
+
+    @Override
+    public void receiveMessage(Message msg) {
+        switch(msg.type) {
+        case NEW_USERNAME:
+
+        }
+    }
+
+    private void setSpinnerValues(String[] names) {
+        spinnerAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, names);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        friendSpinner.setAdapter(spinnerAdapter);
     }
 
     @Override
@@ -88,6 +87,4 @@ class FriendSpinnerControl extends BaseControl implements OnItemSelectedListener
     public void onNothingSelected(AdapterView<?> parent) {
         DebugLog.log(TAG, "nothing selected, nothing handled");
     }
-
-
 }

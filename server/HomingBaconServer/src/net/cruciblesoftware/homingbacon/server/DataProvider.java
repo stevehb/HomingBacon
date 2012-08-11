@@ -19,6 +19,17 @@ class DataProvider {
         datastore = DatastoreServiceFactory.getDatastoreService();
     }
 
+    boolean hasUser(String username) {
+        // check whether user exists, throw if they do
+        Key userKey = KeyFactory.createKey(DatastoreNames.KIND_USER_ROOT, username);
+        try {
+            datastore.get(userKey);
+            return true;
+        } catch(EntityNotFoundException e) {
+            return false;
+        }
+    }
+
     void addUser(String username) {
         // check whether user exists, throw if they do
         Key userKey = KeyFactory.createKey(DatastoreNames.KIND_USER_ROOT, username);
@@ -67,7 +78,17 @@ class DataProvider {
         if(friends.isEmpty()) {
             friends = friend;
         } else {
-            friends += "," + friend;
+            String[] friendArray = friends.split(",");
+            // ugh this feels bad - there has to be a better way
+            boolean hasThisFriend = false;
+            for(String s : friendArray) {
+                if(s.equalsIgnoreCase(friend)) {
+                    hasThisFriend = true;
+                }
+            }
+            if(!hasThisFriend) {
+                friends += "," + friend;
+            }
         }
         friendsEntity.setProperty(DatastoreNames.PROP_FRIEND_LIST, friends);
         datastore.put(friendsEntity);

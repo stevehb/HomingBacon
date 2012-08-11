@@ -1,41 +1,53 @@
 package net.cruciblesoftware.homingbacon.client;
 
+import net.cruciblesoftware.homingbacon.JsonKeys;
 import android.app.Activity;
-import android.location.Location;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-class MapSystem extends BaseControl {
+class MapSystem extends BaseControl implements Message.Listener {
     private static final String TAG = "HB: " + MapSystem.class.getSimpleName();
     private static final int EARTH_RADIUS = 6371000;
     private final static double BEARING = 0.0;
 
-    private final Activity activity;
-    private final MapView mapView;
-    private Location location;
+    private Activity activity;
+    private MapView mapView;
+    private MapController mapController;
     private int zoomLevel = 18;
 
     MapSystem(Activity a) {
         activity = a;
         mapView = (MapView) (activity.findViewById(R.id.map));
+        mapController = mapView.getController();
 
         DebugLog.log(TAG, "turning on zoom controls");
         mapView.setBuiltInZoomControls(true);
-
-        MapController mc = mapView.getController();
-        mc.setZoom(14);
+        mapController.setZoom(14);
     }
 
-    void updateMap(Location loc) {
-        location = loc;
-        double lat = location.getLatitude();
-        double lon = location.getLongitude();
-        double accuracy = location.getAccuracy();
+    @Override
+    public void receiveMessage(Message msg) {
+        switch(msg.type) {
+        case NEW_FRIEND_LOCATION:
+            JsonParser parser = new JsonParser();
+            JsonObject json = parser.parse(msg.data).getAsJsonObject();
+            updateMap(json.getAsJsonObject(JsonKeys.LATITUDE).getAsDouble(),
+                    json.getAsJsonObject(JsonKeys.LONGITUDE).getAsDouble(),
+                    json.getAsJsonObject(JsonKeys.ACCURACY).getAsDouble(),
+                    json.getAsJsonObject(JsonKeys.EPOCH_TIME).getAsLong());
+            break;
+        default:
+            break;
+        }
+    }
 
-        MapController mc = mapView.getController();
-        mc.setCenter(new GeoPoint((int) (lat * 1000000), (int) (lon * 1000000)));
+    private void updateMap(double lat, double lon, double accuracy, long time) {
+        mapController.setCenter(new GeoPoint((int) (lat * 1000000), (int) (lon * 1000000)));
+        DebugLog.log(TAG, "remapping to lat=" + lat + ", lon=" + lon + ", accuracy=" + accuracy);
 
         // determine optimal range to show in mapview
         if(accuracy < 1000)
@@ -59,11 +71,7 @@ class MapSystem extends BaseControl {
                         cosAngDist - sinLat1 * Math.sin(lat2));
         final double latSpan = Math.toDegrees(Math.abs(lat2 - lat1));
         final double lonSpan = Math.toDegrees(Math.abs(lon2 - lon1));
-        mc.zoomToSpan((int) (latSpan * 1000000), (int) (lonSpan * 1000000));
+        mapController.zoomToSpan((int) (latSpan * 1000000), (int) (lonSpan * 1000000));
         zoomLevel = mapView.getZoomLevel();
-
-        DebugLog.log(TAG, "point (" + lat + "," + lon + ") with accuracy="
-                + accuracy + " gives latSpan=" + latSpan + ", lonSpan="
-                + lonSpan + ", zoomLevel=" + zoomLevel);
     }
 }

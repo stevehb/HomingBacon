@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>
+  $(document).ready(function() {
+	  $('#timeTxt').val(Math.floor(Date.now() / 1000));
+  });
+  </script>
+  
+  <script>
+  function doAction() {
+	  var baseUrl = "homingbacon";
+	  var fullUrl = "";
+	  var resultsElem = $('#results').get();
+	  var action = $('#actionSelect').val();
+	  
+	  var username = $('#usernameTxt').val();
+	  var friend = $('#friendTxt').val();
+      var lat = $('#latTxt').val();
+      var lon = $('#lonTxt').val();
+      var acc = $('#accTxt').val();
+      var time = $('#timeTxt').val();
+	  	  
+	  switch(action) {
+	  case "hasuser":
+		  fullUrl = baseUrl + "?action=hasuser&username=" + encodeURIComponent(username);
+		  break;
+      case "adduser":
+          fullUrl = baseUrl + "?action=adduser&username=" + encodeURIComponent(username);
+          break;
+      case "addfriend":
+          fullUrl = baseUrl + "?action=addfriend&username=" + encodeURIComponent(username) + 
+        		  "&friend=" + encodeURIComponent(friend);
+          break;
+      case "getfriendlist":
+          fullUrl = baseUrl + "?action=getfriendlist&username=" + encodeURIComponent(username);
+          break;
+      case "getposition":
+          fullUrl = baseUrl + "?action=getposition&username=" + encodeURIComponent(username) + 
+        		  "&friend=" + encodeURIComponent(friend);
+          break;
+      case "setposition":
+          fullUrl = baseUrl + "?action=setposition&username=" + encodeURIComponent(username) +
+        		  "&lat=" + encodeURIComponent(lat) + 
+        		  "&lon=" + encodeURIComponent(lon) + 
+        		  "&accuracy=" + encodeURIComponent(acc) + 
+        		  "&time=" + encodeURIComponent(time);
+          break;
+      case "getusers":
+          fullUrl = baseUrl + "?action=getusers&username=" + encodeURIComponent(username);
+          break;
+	  }
+
+      console.log("requesting: " + fullUrl);
+      $.ajax({
+          url: fullUrl
+      }).done(function(resp) {
+         $('#results').text(resp);
+      });
+	  return false;
+  }
+  
+  </script>
+<title>HomingBacon Debug Interface Page</title>
+</head>
+<body>
+    <h2>Debug Interface</h2>
+    <h3>Config</h3>
+    <form onsubmit="doAction()" action="javascript:void(0)">
+        <table>
+            <tr><td>Username:</td><td><input type="text" id="usernameTxt" value="stevehb" /></td></tr>
+            <tr><td>Friend:</td><td><input type="text" id="friendTxt" value="ironypoisoning" /></td></tr>
+            <tr>
+                <td>Latitude:</td><td><input type="text" id="latTxt" value="0.00" /></td>
+                <td>Longitude:</td><td><input type="text" id="lonTxt" value="0.00" /></td>
+            </tr>
+            <tr><td>Accuracy:</td><td><input type="text" id="accTxt" value="1.00" /></td></tr>
+            <tr><td>Epoch Time:</td><td><input type="text" id="timeTxt" /></td></tr>
+            <tr>
+              <td>Action:</td>
+              <td><select id="actionSelect">
+                    <option value="hasuser" selected="selected">Has User</option>
+                    <option value="adduser">Add User</option>
+                    <option value="addfriend">Add Friend</option>
+                    <option value="getfriendlist">Get Friend List</option>
+                    <option value="setposition">Set Position</option>
+                    <option value="getposition">Get Position</option>
+                    <option value="getusers">Get Users</option>
+                </select></td>
+            </tr>
+        </table>
+        <input type="button" value="Submit" onclick="doAction()" />    
+    </form>
+    
+    <h3>JSON Result:</h3>
+    <p id="results"></p>
+</body>
+</html>

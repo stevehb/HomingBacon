@@ -5,14 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.widget.EditText;
 import android.widget.Toast;
 
 class UserData {
     private static final String TAG = "HB: " + UserData.class.getSimpleName();
-
-    private Location location;
 
     private Activity activity;
     private PostOffice post;
@@ -29,14 +26,6 @@ class UserData {
         editor = prefs.edit();
     }
 
-    Location getUserLocation() {
-        return location;
-    }
-
-    void setUserLocation(Location l) {
-        location = l;
-    }
-
     boolean hasUsername() {
         String username = prefs.getString(PreferenceKeys.USERNAME, "");
         return !username.isEmpty();
@@ -46,7 +35,7 @@ class UserData {
         final OpenAlertDialog dialog = new OpenAlertDialog(activity);
         dialog.setTitle(R.string.dialog_get_username_title);
         dialog.setMessage(activity.getText(R.string.dialog_get_username_message));
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
 
         final EditText input = new EditText(activity);
         dialog.setView(input);
@@ -57,7 +46,9 @@ class UserData {
                 // TODO: need to check with server to see whether username is taken
                 boolean usernameOk = !username.isEmpty();
 
-                if(usernameOk) {
+                DebugLog.log(TAG, "button=" + whichButton);
+
+                if(!usernameOk) {
                     Toast.makeText(activity, R.string.dialog_get_username_error,
                             Toast.LENGTH_LONG).show();
                     dialog.setCloseFlag(false);
