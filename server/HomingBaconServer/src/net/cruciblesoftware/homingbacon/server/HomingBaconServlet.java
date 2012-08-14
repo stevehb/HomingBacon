@@ -53,8 +53,8 @@ public class HomingBaconServlet extends HttpServlet {
             DataProvider data = new DataProvider();
             if(paramAction.equalsIgnoreCase(ServerActions.HAS_USER)) {
                 boolean hasUser = data.hasUser(paramUsername);
-                json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);
                 json.addProperty(JsonKeys.MESSAGE, hasUser);
+                json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);
             } else if(paramAction.equalsIgnoreCase(ServerActions.ADD_USER)) {
                 data.addUser(paramUsername);
                 json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);

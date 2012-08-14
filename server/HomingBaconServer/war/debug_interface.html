@@ -3,9 +3,23 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <style type="text/css">
+  .debug_display {
+    font-family: monospace;
+    margin: 1px;
+  }
+  body {
+    font-family: sans-serif;
+  }
+  table {
+    background-color: #E5ECF9;
+  }
+  </style>
   <script>
   $(document).ready(function() {
-	  $('#timeTxt').val(Math.floor(Date.now() / 1000));
+	  setInterval(function() {
+	      $('#timeTxt').val(Math.floor(Date.now() / 1000));
+	  }, 1000);
   });
   </script>
   
@@ -53,7 +67,9 @@
           break;
 	  }
 
-      console.log("requesting: " + fullUrl);
+	  fullUrl += "&time=" + Date.now();
+	  $('#request').text(fullUrl);
+	  $('#response').text('');
       $.ajax({
           url: fullUrl
       }).done(function(resp) {
@@ -94,7 +110,10 @@
         <input type="button" value="Submit" onclick="doAction()" />    
     </form>
     
-    <h3>JSON Result:</h3>
-    <p id="results"></p>
+    <h3>Marco & Polo:</h3>
+    <table>
+        <tr><td>Request:</td><td><p class="debug_display" id="request"></p></td></tr>
+        <tr><td>Response:</td><td><p class="debug_display" id="results"></p></td></tr>
+    </table>
 </body>
 </html>
