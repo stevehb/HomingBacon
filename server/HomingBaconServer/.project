@@ -36,4 +36,11 @@
 		<nature>com.google.appengine.eclipse.core.gaeNature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>homingbacon</name>
+			<type>2</type>
+			<location>C:/Users/stevehb/workspace/HomingBacon/common/src/net/cruciblesoftware/homingbacon</location>
+		</link>
+	</linkedResources>
 </projectDescription>

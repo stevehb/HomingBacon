@@ -13,6 +13,7 @@
   }
   table {
     background-color: #E5ECF9;
+    border: 1px solid #afb3bb;
   }
   </style>
   <script>
@@ -36,7 +37,10 @@
       var lon = $('#lonTxt').val();
       var acc = $('#accTxt').val();
       var time = $('#timeTxt').val();
-	  	  
+
+      // clear results first in case server doesn't respond
+      $('#results').text('');
+      
 	  switch(action) {
 	  case "hasuser":
 		  fullUrl = baseUrl + "?action=hasuser&username=" + encodeURIComponent(username);

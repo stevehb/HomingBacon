@@ -14,7 +14,7 @@ import com.google.appengine.api.datastore.Query;
 
 class DataProvider {
 
-    DatastoreService datastore;
+    private DatastoreService datastore;
 
     DataProvider() {
         datastore = DatastoreServiceFactory.getDatastoreService();
@@ -71,6 +71,10 @@ class DataProvider {
     void addFriend(String username, String friend) {
         // get friend list entity for the user
         Entity userRoot = getUserRoot(username);
+        if(userRoot == null) {
+            throw new IllegalArgumentException("no such user '" + username + "'");
+        }
+
         Query q = new Query(DatastoreNames.KIND_FRIEND_LIST, userRoot.getKey());
         PreparedQuery pq = datastore.prepare(q);
         Entity friendListEntity = pq.asSingleEntity();
@@ -132,6 +136,9 @@ class DataProvider {
     String getFriendList(String username) {
         // get user
         Entity userRoot = getUserRoot(username);
+        if(userRoot == null) {
+            throw new IllegalArgumentException("no such user '" + username + "'");
+        }
 
         // get friend list child entity
         Query q = new Query(DatastoreNames.KIND_FRIEND_LIST, userRoot.getKey());
@@ -144,9 +151,12 @@ class DataProvider {
         return (list == null || list.isEmpty() ? "" : list);
     }
 
-    void setLastKnownPosition(String username, LastKnownPosition pos) {
+    void setLastKnownPosition(String username, SimplePosition pos) {
         // get user
         Entity userRoot = getUserRoot(username);
+        if(userRoot == null) {
+            throw new IllegalArgumentException("no such user '" + username + "'");
+        }
 
         // get last known position child entity
         Query q = new Query(DatastoreNames.KIND_LAST_KNOWN_POSITION, userRoot.getKey());
@@ -156,16 +166,19 @@ class DataProvider {
             lkpEntity = addDefaultLastKnownPositionEntity(userRoot);
         }
 
-        lkpEntity.setProperty(DatastoreNames.PROP_LATITUDE, pos.latitude);
-        lkpEntity.setProperty(DatastoreNames.PROP_LONGITUDE, pos.longitude);
-        lkpEntity.setProperty(DatastoreNames.PROP_ACCURACY, pos.accuracy);
-        lkpEntity.setProperty(DatastoreNames.PROP_EPOCH_TIME, pos.epochTime);
+        lkpEntity.setProperty(DatastoreNames.PROP_LATITUDE, pos.simpleLatitude);
+        lkpEntity.setProperty(DatastoreNames.PROP_LONGITUDE, pos.simpleLongitude);
+        lkpEntity.setProperty(DatastoreNames.PROP_ACCURACY, pos.simpleAccuracy);
+        lkpEntity.setProperty(DatastoreNames.PROP_EPOCH_TIME, pos.simpleEpochTime);
         datastore.put(lkpEntity);
     }
 
-    LastKnownPosition getLastKnownPosition(String username) {
+    SimplePosition getLastKnownPosition(String username) {
         // get user
         Entity userRoot = getUserRoot(username);
+        if(userRoot == null) {
+            throw new IllegalArgumentException("no such user '" + username + "'");
+        }
 
         // get last known position child entity
         Query q = new Query(DatastoreNames.KIND_LAST_KNOWN_POSITION, userRoot.getKey());
@@ -179,15 +192,19 @@ class DataProvider {
             lkpEntity = addDefaultLastKnownPositionEntity(userRoot);
         }
 
-        LastKnownPosition pos = new LastKnownPosition();
-        pos.latitude = Double.parseDouble(lkpEntity.getProperty(DatastoreNames.PROP_LATITUDE).toString());
-        pos.longitude = Double.parseDouble(lkpEntity.getProperty(DatastoreNames.PROP_LONGITUDE).toString());
-        pos.accuracy = Double.parseDouble(lkpEntity.getProperty(DatastoreNames.PROP_ACCURACY).toString());
-        pos.epochTime = Long.parseLong(lkpEntity.getProperty(DatastoreNames.PROP_EPOCH_TIME).toString());
+        SimplePosition pos = new SimplePosition();
+        pos.simpleLatitude = Double.parseDouble(lkpEntity.getProperty(DatastoreNames.PROP_LATITUDE).toString());
+        pos.simpleLongitude = Double.parseDouble(lkpEntity.getProperty(DatastoreNames.PROP_LONGITUDE).toString());
+        pos.simpleAccuracy = Double.parseDouble(lkpEntity.getProperty(DatastoreNames.PROP_ACCURACY).toString());
+        pos.simpleEpochTime = Long.parseLong(lkpEntity.getProperty(DatastoreNames.PROP_EPOCH_TIME).toString());
         return pos;
     }
 
     private Entity getUserRoot(String username) {
+        if(!hasUser(username)) {
+            return null;
+        }
+
         // get root key for this username
         Query q = new Query(DatastoreNames.KIND_USER_DATA);
         q.setFilter(new Query.FilterPredicate(DatastoreNames.PROP_USERNAME, Query.FilterOperator.EQUAL, username));

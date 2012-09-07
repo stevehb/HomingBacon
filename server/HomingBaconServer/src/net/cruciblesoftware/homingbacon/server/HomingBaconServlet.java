@@ -14,7 +14,7 @@ import net.cruciblesoftware.homingbacon.UrlParameters;
 import com.google.gson.JsonObject;
 
 public class HomingBaconServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8087758028767592984L;
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -53,7 +53,7 @@ public class HomingBaconServlet extends HttpServlet {
             DataProvider data = new DataProvider();
             if(paramAction.equalsIgnoreCase(ServerActions.HAS_USER)) {
                 boolean hasUser = data.hasUser(paramUsername);
-                json.addProperty(JsonKeys.MESSAGE, hasUser);
+                json.addProperty(JsonKeys.HAS_USER, hasUser);
                 json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);
             } else if(paramAction.equalsIgnoreCase(ServerActions.ADD_USER)) {
                 data.addUser(paramUsername);
@@ -72,11 +72,11 @@ public class HomingBaconServlet extends HttpServlet {
                 json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);
             } else if(paramAction.equalsIgnoreCase(ServerActions.GET_POSITION)) {
                 String paramFriend = getUrlParam(req, UrlParameters.FRIEND);
-                LastKnownPosition pos = data.getLastKnownPosition(paramFriend);
-                json.addProperty(JsonKeys.LATITUDE, pos.latitude);
-                json.addProperty(JsonKeys.LONGITUDE, pos.longitude);
-                json.addProperty(JsonKeys.ACCURACY, pos.accuracy);
-                json.addProperty(JsonKeys.EPOCH_TIME, pos.epochTime);
+                SimplePosition pos = data.getLastKnownPosition(paramFriend);
+                json.addProperty(JsonKeys.LATITUDE, pos.simpleLatitude);
+                json.addProperty(JsonKeys.LONGITUDE, pos.simpleLongitude);
+                json.addProperty(JsonKeys.ACCURACY, pos.simpleAccuracy);
+                json.addProperty(JsonKeys.EPOCH_TIME, pos.simpleEpochTime);
                 json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);
             } else if(paramAction.equalsIgnoreCase(ServerActions.SET_POSITION)) {
                 // first get and check the URL parameters
@@ -86,11 +86,11 @@ public class HomingBaconServlet extends HttpServlet {
                 String paramTime = getUrlParam(req, UrlParameters.EPOCH_TIME);
 
                 // create a position and set it
-                LastKnownPosition pos = new LastKnownPosition();
-                pos.latitude = Double.parseDouble(paramLat);
-                pos.longitude = Double.parseDouble(paramLon);
-                pos.accuracy = Double.parseDouble(paramAccuracy);
-                pos.epochTime = Long.parseLong(paramTime);
+                SimplePosition pos = new SimplePosition();
+                pos.simpleLatitude = Double.parseDouble(paramLat);
+                pos.simpleLongitude = Double.parseDouble(paramLon);
+                pos.simpleAccuracy = Double.parseDouble(paramAccuracy);
+                pos.simpleEpochTime = Long.parseLong(paramTime);
                 data.setLastKnownPosition(paramUsername, pos);
                 json.addProperty(JsonKeys.STATUS, JsonValues.SUCCESS);
             }
@@ -102,7 +102,7 @@ public class HomingBaconServlet extends HttpServlet {
             json.addProperty(JsonKeys.MESSAGE, "bad argument: " + e.getLocalizedMessage());
         } catch(Exception e) {
             json.addProperty(JsonKeys.STATUS, JsonValues.ERROR);
-            json.addProperty(JsonKeys.MESSAGE, "unknown error: " + e.getLocalizedMessage());
+            json.addProperty(JsonKeys.MESSAGE, "unspecified error: " + e.getLocalizedMessage());
             e.printStackTrace(System.err);
         }
 
