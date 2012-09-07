@@ -3,14 +3,17 @@
     <string name="app_name">Homing Bacon</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_set_username">Set Username</string>
-    
     <string name="dialog_get_username_title">Choose Username</string>
-    <string name="dialog_get_username_message">Your username:</string>
-    <string name="dialog_get_username_error">Invalid Username</string>
-    
-    <string name="title_activity_homing_bacon">Homing Bacon</string>
-    <string name="title_control_listening_checkbox">Listening</string>
-    <string name="title_control_transmitting_checkbox">Transmitting</string>
-    <string name="title_control_username_spinner">Choose friend:</string>
-    
+    <string name="dialog_get_username_message">What\'s your handle?</string>
+    <string name="dialog_check_username_message">Checking with the server...</string>
+    <string name="toast_username_blank_error">Blank username is invalid.</string>
+    <string name="toast_username_no_change">No change.</string>
+    <string name="toast_cancel_no_username">Wait! You haven\'t chosen a username! Use the menu to choose a username.</string>
+    <string name="toast_username_already_exists_error">Great minds think alike. That username is already taken. Try again.</string>
+    <string name="toast_username_accepted">Username accepted.</string>
+    <string name="title_activity_main">Homing Bacon</string>
+    <string name="label_control_listening_checkbox">Listening</string>
+    <string name="label_control_transmitting_checkbox">Transmitting</string>
+    <string name="label_control_friend_list_spinner">Choose friend:</string>
+
 </resources>

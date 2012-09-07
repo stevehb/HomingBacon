@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.cruciblesoftware.homingbacon.client"
+    package="net.cruciblesoftware.homingbacon"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="16" />
+        android:targetSdkVersion="10" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,8 +17,8 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".HomingBaconActivity"
-            android:label="@string/title_activity_homing_bacon" >
+            android:name=".clients.activities.MainActivity"
+            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

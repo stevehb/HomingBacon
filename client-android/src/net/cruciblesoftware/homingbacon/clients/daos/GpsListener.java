@@ -1,6 +1,8 @@
-package net.cruciblesoftware.homingbacon.client;
+package net.cruciblesoftware.homingbacon.clients.daos;
 
-import net.cruciblesoftware.homingbacon.UrlParameters;
+import net.cruciblesoftware.homingbacon.JsonKeys;
+import net.cruciblesoftware.homingbacon.clients.pojos.Message;
+import net.cruciblesoftware.homingbacon.clients.utils.DebugLog;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
@@ -11,8 +13,8 @@ import android.os.Bundle;
 
 import com.google.gson.JsonObject;
 
-class GpsListener implements LocationListener{
-    private static final String TAG = "20: " + TransmitControl.class.getSimpleName();
+public class GpsListener implements LocationListener{
+    private static final String TAG = "HB: " + GpsListener.class.getSimpleName();
     private static final int TWO_MINUTES = 1000 * 60 * 2;
     private static final int FIVE_SECONDS = 1000 * 5;
     private static final int TEN_METERS = 10;
@@ -22,21 +24,20 @@ class GpsListener implements LocationListener{
     private boolean isGpsAvail = false;
     private boolean isGpsLive = false;
 
-    private Activity activity;
-    private PostOffice post;
+    private Message.Listener listener;
     private LocationManager locManager;
+    private Location bestLocation;
 
-    Location bestLocation;
-
-    GpsListener(Activity a, PostOffice p) {
-        activity = a;
-        post = p;
+    public GpsListener(Activity activity, Message.Listener listener) {
         locManager = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
+        this.listener = listener;
         isNetAvail = locManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         isGpsAvail = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        DebugLog.log(TAG, "creating the GPS listener: isNetAvail=" + isNetAvail + ", isGpsAvail=" + isGpsAvail);
     }
 
-    void activiate() {
+    public void activate() {
+        DebugLog.log(TAG, "activating location listener");
         if(isNetAvail && !isNetLive) {
             locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                     FIVE_SECONDS, TEN_METERS, this);
@@ -47,7 +48,8 @@ class GpsListener implements LocationListener{
         }
     }
 
-    void deactivate() {
+    public void deactivate() {
+        DebugLog.log(TAG, "deactivating location listener");
         locManager.removeUpdates(this);
         isGpsLive = false;
         isNetLive = false;
@@ -63,14 +65,14 @@ class GpsListener implements LocationListener{
         // test incoming location
         if(isBetterLocation(loc)) {
             bestLocation = loc;
-            JsonObject json = new JsonObject();
-            json.addProperty(UrlParameters.LATITUDE, bestLocation.getLatitude());
-            json.addProperty(UrlParameters.LONGITUDE, bestLocation.getLongitude());
-            json.addProperty(UrlParameters.ACCURACY, bestLocation.getAccuracy());
-            json.addProperty(UrlParameters.EPOCH_TIME, bestLocation.getTime());
+            JsonObject jsonObj = new JsonObject();
+            jsonObj.addProperty(JsonKeys.LATITUDE, bestLocation.getLatitude());
+            jsonObj.addProperty(JsonKeys.LONGITUDE, bestLocation.getLongitude());
+            jsonObj.addProperty(JsonKeys.ACCURACY, bestLocation.getAccuracy());
+            jsonObj.addProperty(JsonKeys.EPOCH_TIME, bestLocation.getTime());
             DebugLog.log(TAG, "new best location from " +
-                    loc.getProvider() + ": " + json.toString());
-            post.dispatchMessage(new Message(Message.Type.NEW_USER_LOCATION, json.toString()));
+                    loc.getProvider() + ": " + jsonObj.toString());
+            listener.receiveMessage(new Message(Message.Type.GPS_RESPONSE, jsonObj.toString()));
         }
     }
 

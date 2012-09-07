@@ -1,26 +1,26 @@
-package net.cruciblesoftware.homingbacon.client;
+package net.cruciblesoftware.homingbacon.clients.utils;
 
 import java.net.URLEncoder;
 
-class UrlBuilder {
+public class UrlBuilder {
     private static final String TAG = "HB: " + UrlBuilder.class.getSimpleName();
     private StringBuilder urlBuff;
     private boolean hasParam = false;
 
-    UrlBuilder() {
+    public UrlBuilder() {
         urlBuff = new StringBuilder();
     }
 
-    UrlBuilder(String baseUrl) {
+    public UrlBuilder(String baseUrl) {
         urlBuff = new StringBuilder(baseUrl);
     }
 
-    UrlBuilder setHost(String host) {
+    public UrlBuilder setHost(String host) {
         urlBuff = new StringBuilder(host);
         return this;
     }
 
-    UrlBuilder addParam(String key, String value) {
+    public UrlBuilder addParam(String key, String value) {
         if(!hasParam) {
             urlBuff.append("?");
             hasParam = true;

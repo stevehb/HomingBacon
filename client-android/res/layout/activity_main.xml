@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<net.cruciblesoftware.homingbacon.clients.views.MainView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:context=".clients.activities.MainActivity" >
 
     <LinearLayout
         android:id="@+id/controlLayout"
@@ -20,29 +21,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/title_control_listening_checkbox" />
+                android:text="@string/label_control_listening_checkbox" />
 
             <CheckBox
                 android:id="@+id/transmit_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="@string/title_control_transmitting_checkbox" />
+                android:text="@string/label_control_transmitting_checkbox" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/username_spinner_label"
+            android:id="@+id/friend_list_spinner_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/title_control_username_spinner"
+            android:text="@string/label_control_friend_list_spinner"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <Spinner
-            android:id="@+id/username_spinner"
+        <net.cruciblesoftware.homingbacon.clients.views.FriendListSpinner
+            android:id="@+id/friend_list_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
     <include layout="@layout/mapview_debug" />
 
-</RelativeLayout>
+</net.cruciblesoftware.homingbacon.clients.views.MainView>
