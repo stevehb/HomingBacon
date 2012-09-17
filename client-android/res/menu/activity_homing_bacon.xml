@@ -2,13 +2,13 @@
 
     <item
         android:id="@+id/menu_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="100"
-        android:title="@string/menu_settings"
-        android:icon="@android:drawable/ic_menu_preferences"/>
+        android:title="@string/menu_settings"/>
     <item
-        android:id="@+id/menu_set_username"
+        android:id="@+id/menu_add_friend"
+        android:icon="@android:drawable/ic_menu_add"
         android:orderInCategory="200"
-        android:title="@string/menu_set_username"
-        android:icon="@android:drawable/ic_menu_edit"/>
+        android:title="@string/menu_add_friend"/>
 
 </menu>

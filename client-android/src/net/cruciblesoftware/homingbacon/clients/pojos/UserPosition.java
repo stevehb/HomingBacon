@@ -8,42 +8,12 @@ import com.google.gson.JsonObject;
 
 public class UserPosition extends Position {
     protected String username;
-    protected boolean hasData;
-
-    public boolean hasData() {
-        return hasData;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    @Override
-    public void setLatitude(double latitude) {
-        super.setLatitude(latitude);
-        hasData = true;
-    }
-
-    @Override
-    public void setLongitude(double longitude) {
-        super.setLongitude(longitude);
-        hasData = true;
-    }
-
-    @Override
-    public void setAccuracy(double accuracy) {
-        super.setAccuracy(accuracy);
-        hasData = true;
-    }
-
-    @Override
-    public void setEpochTime(long epochTime) {
-        super.setEpochTime(epochTime);
-        hasData = true;
     }
 
     public String toJsonStr() {

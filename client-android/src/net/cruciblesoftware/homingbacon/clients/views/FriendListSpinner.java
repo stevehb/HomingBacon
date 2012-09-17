@@ -46,7 +46,7 @@ public class FriendListSpinner extends Spinner implements Message.Listener, OnIt
             String friendStr = model.getFriendList();
             String[] friendArray = friendStr.split(",");
             ArrayList<String> friendList = new ArrayList<String>(Arrays.asList(friendArray));
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, friendList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, friendList);
             setAdapter(adapter);
             break;
         default:
@@ -57,8 +57,12 @@ public class FriendListSpinner extends Spinner implements Message.Listener, OnIt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String friendUsername = (String)parent.getItemAtPosition(position);
-        DebugLog.log(TAG, "selected friend '" + friendUsername + "'");
-        post.dispatchMessage(new Message(Message.Type.CONTROL_SPINNER_FRIEND_CHOSEN, friendUsername));
+        if(friendUsername == null || friendUsername.isEmpty()) {
+            DebugLog.log(TAG, "bad friend username: '" + friendUsername + "'; not storing");
+        } else {
+            DebugLog.log(TAG, "selected friend '" + friendUsername + "'");
+            post.dispatchMessage(new Message(Message.Type.CONTROL_SPINNER_FRIEND_CHOSEN, friendUsername));
+        }
     }
 
     @Override

@@ -49,7 +49,6 @@ public class FriendListSpinnerController implements Message.Listener {
     public void receiveMessage(Message msg) {
         switch(msg.type) {
         case CONTROL_SPINNER_FRIEND_CHOSEN:
-            DebugLog.log(TAG, "chose friend '" + msg.data);
             model.changeFriend(msg.data);
             break;
         case MODEL_CREATE_USER:
@@ -57,11 +56,14 @@ public class FriendListSpinnerController implements Message.Listener {
             handler.post(listUpdateLoop);
             break;
         case ON_RESUME:
-            isUpdatingList = true;
-            handler.post(listUpdateLoop);
+            if(model.hasUser()) {
+                isUpdatingList = true;
+                handler.post(listUpdateLoop);
+            }
             break;
         case ON_PAUSE:
             isUpdatingList = false;
+            handler.removeCallbacks(listUpdateLoop);
             break;
         case SERVER_RESPONSE:
             DebugLog.log(TAG, "message back from server: " + msg.data);

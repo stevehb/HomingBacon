@@ -81,6 +81,13 @@ public class MainView extends RelativeLayout implements Message.Listener {
                 transmitCheckBox.setEnabled(true);
                 friendListSpinner.setEnabled(true);
             }
+            break;
+        case CONTROL_TOGGLE_LISTEN_OFF:
+            listenCheckBox.setChecked(false);
+            break;
+        case CONTROL_TOGGLE_TRANSMIT_OFF:
+            transmitCheckBox.setChecked(false);
+            break;
         }
     }
 }

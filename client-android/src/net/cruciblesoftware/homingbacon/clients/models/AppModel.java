@@ -107,7 +107,6 @@ public class AppModel {
         user.setLongitude(longitude);
         user.setAccuracy(accuracy);
         user.setEpochTime(epochTime);
-        DebugLog.log(TAG, "set new user position, sending update message");
         post.dispatchMessage(new Message(Message.Type.MODEL_UPDATE_USER_POSITION));
     }
 
@@ -124,9 +123,6 @@ public class AppModel {
     }
 
     public synchronized void changeFriend(String friendUsername) {
-
-        DebugLog.log(TAG, "about to set hasFriend=true for new friend username '" + friendUsername + "'");
-
         friend = new UserPosition();
         friend.setUsername(friendUsername);
         hasFriend = true;

@@ -1,13 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.cruciblesoftware.homingbacon"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="002000"
+    android:versionName="0.2.0" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="10" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -24,6 +25,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".clients.activities.SettingsActivity"
+            android:label="@string/title_activity_main" >
         </activity>
     </application>
 
